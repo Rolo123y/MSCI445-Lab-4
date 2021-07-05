@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Net;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Ping_Client
 {
@@ -49,16 +50,22 @@ namespace Ping_Client
         {
             for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine("CLIENT SENT PING: " + i + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
-                udpClient.Send(Array.Empty<byte>(), 0);
+                Console.WriteLine("CLIENT SENT PING: " + i + " TIME: " + System.DateTime.Now.TimeOfDay + " \r\n");
+                byte[] rdata = Encoding.ASCII.GetBytes("PING " + i + " " + System.DateTime.Now.TimeOfDay + " \r\n");
+                Stopwatch stopWatch = new Stopwatch(); 
+                stopWatch.Start(); 
+                udpClient.Send(rdata, rdata.Length);
+
 
                 var task = Task.Run(() => udpClient.Receive(ref RemoteIpEndPoint));
                 if (task.Wait(TimeSpan.FromSeconds(1)))
                 {
-                    Console.WriteLine("CLIENT RECIEVED PING: " + i + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
+                    stopWatch.Stop();
+                    TimeSpan RTT = stopWatch.Elapsed;
+                    Console.WriteLine("CLIENT RECIEVED PING: " + i + " RTT: " + RTT.Seconds+"."+RTT.Milliseconds + "seconds \r\n");
                 }
                 else { 
-                Console.WriteLine("SERVER LOST PACKET PING: " + i + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
+                Console.WriteLine("PACKET LOST DURING TRANSMISSION PING: " + i + " TIME: " + System.DateTime.Now.TimeOfDay + " \r\n");
                     continue;
                 }
             }

@@ -11,7 +11,7 @@ namespace Ping_Server
     class Ping_Server
     {
         private const double LOSS_RATE = 0.3;
-        private const double AVG_DELAY = 100; //milliseconds
+        private const double AVG_DELAY = 50; //milliseconds
         static void Main(string[] args)
         {
             string val;
@@ -53,22 +53,22 @@ namespace Ping_Server
             {
                 // Block until the host receives a UDP packet.
                 byte[] rdata = socket.Receive(ref ep);
-                Console.WriteLine("SERVER: Received UDP data" + " TIME: " + System.DateTime.Now.TimeOfDay + "\n");
+                Console.WriteLine("SERVER: Received UDP data" + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
                 // Print the recieved data.
                 string name_string = Encoding.ASCII.GetString(rdata);
-                Console.WriteLine("SERVER: Just received: " + name_string + " TIME: " + System.DateTime.Now.TimeOfDay + "\n");
+                Console.WriteLine("SERVER: Just received: " + name_string +"\r\n");
 
                 // Decide whether to reply, or simulate packet loss.
                 if (random.NextDouble() < LOSS_RATE)
                 {
-                    Console.WriteLine("SERVER: Reply not sent." + " TIME: " + System.DateTime.Now.TimeOfDay + "\n");
+                    Console.WriteLine("SERVER: Reply not sent." + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
                     continue;
                 }
                 // Simulate network delay.
                 Thread.Sleep((int)(random.NextDouble() * 2 * AVG_DELAY));
                 // Send reply.
                 socket.Send(rdata, rdata.Length, ep);
-                Console.WriteLine("SERVER: Reply sent." + " TIME: " + System.DateTime.Now.TimeOfDay + "\n");
+                Console.WriteLine("SERVER: Reply sent." + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
             }
         }
     }
