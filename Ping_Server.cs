@@ -15,6 +15,7 @@ namespace Ping_Server
         static void Main(string[] args)
         {
             string val;
+            // get port number from cli input
             Console.Write("Enter your port number: ");
             val = Console.ReadLine();
 
@@ -34,7 +35,7 @@ namespace Ping_Server
                 return;
             }
             int port = Convert.ToInt32(val);
-            string host = "127.0.0.1";
+
 
             IPEndPoint localpt = new IPEndPoint(IPAddress.Any, port);
             // Create random number generator for use in simulating
@@ -53,22 +54,22 @@ namespace Ping_Server
             {
                 // Block until the host receives a UDP packet.
                 byte[] rdata = socket.Receive(ref ep);
-                Console.WriteLine("SERVER: Received UDP data" + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
+                Console.WriteLine("Received UDP data");
                 // Print the recieved data.
                 string name_string = Encoding.ASCII.GetString(rdata);
-                Console.WriteLine("SERVER: Just received: " + name_string +"\r\n");
+                Console.WriteLine("Just received: " + name_string);
 
                 // Decide whether to reply, or simulate packet loss.
                 if (random.NextDouble() < LOSS_RATE)
                 {
-                    Console.WriteLine("SERVER: Reply not sent." + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
+                    Console.WriteLine("     Reply not sent.\n");
                     continue;
                 }
                 // Simulate network delay.
                 Thread.Sleep((int)(random.NextDouble() * 2 * AVG_DELAY));
                 // Send reply.
                 socket.Send(rdata, rdata.Length, ep);
-                Console.WriteLine("SERVER: Reply sent." + " TIME: " + System.DateTime.Now.TimeOfDay + "\r\n");
+                Console.WriteLine("     Reply sent.\n");
             }
         }
     }
