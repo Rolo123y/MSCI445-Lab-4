@@ -53,7 +53,7 @@ namespace Ping_Client
         // method to send N pings from client to server, and display RTT when reply is received
         public static void send_N_Pings(int N, IPEndPoint RemoteIpEndPoint, UdpClient udpClient)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < N; i++)
             {
                 Console.WriteLine("SENT PING: " + i + " AT TIME: " + System.DateTime.Now.TimeOfDay + " \r\n");
                 // Create packet of data
